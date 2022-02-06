@@ -6,7 +6,7 @@ namespace SoftUniHttpServer.Server.Routing
 {
     public class RoutingTable : IRoutingTable
     {
-        private readonly Dictionary<Method, Dictionary<string, Response>> routes;
+        private readonly Dictionary<Method, Dictionary<string, Func<Request, Response>>> routes;
 
         public RoutingTable() => this.routes = new()
         {
@@ -16,29 +16,34 @@ namespace SoftUniHttpServer.Server.Routing
             [Method.Delete] = new(StringComparer.InvariantCultureIgnoreCase),
         };
 
-        public IRoutingTable Map(string url, Method method, Response response) => method switch
+        public IRoutingTable Map(Method method, string path, Func<Request, Response> responseFunction)
         {
-            Method.Get => this.MapGet(url, response),
-            Method.Post => this.MapPost(url, response),
-            _ => throw new InvalidOperationException($"Method '{method}' is not supported.")
-        };
+            Guard.AgainstNull(path, nameof(path));
+            Guard.AgainstNull(responseFunction, nameof(responseFunction));
 
-        public IRoutingTable MapGet(string url, Response response)
+            switch (method)
+            {
+                case Method.Get:
+                    return MapGet(path, responseFunction);
+                case Method.Post:
+                    return MapPost(path, responseFunction);
+                case Method.Put:
+                case Method.Delete:
+                default:
+                    throw new ArgumentOutOfRangeException($"The method {nameof(method)} is not supported");
+            }
+        }
+
+        private IRoutingTable MapGet(string path, Func<Request, Response> responseFunction)
         {
-            Guard.AgainstNull(url, nameof(url));
-            Guard.AgainstNull(response, nameof(response));
-
-            this.routes[Method.Get][url] = response;
+            this.routes[Method.Get][path] = responseFunction;
 
             return this;
         }
 
-        public IRoutingTable MapPost(string url, Response response)
+        private IRoutingTable MapPost(string path, Func<Request, Response> responseFunction)
         {
-            Guard.AgainstNull(url, nameof(url));
-            Guard.AgainstNull(response, nameof(response));
-
-            this.routes[Method.Post][url] = response;
+            this.routes[Method.Post][path] = responseFunction;
 
             return this;
         }
@@ -54,7 +59,9 @@ namespace SoftUniHttpServer.Server.Routing
                 return new NotFoundResponse();
             }
 
-            return this.routes[requestMethod][requestUrl];
+            var responseFunction = this.routes[requestMethod][requestUrl];
+
+            return responseFunction(request);
         }
     }
 }
