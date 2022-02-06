@@ -1,10 +1,5 @@
 ﻿using SoftUniHttpServer.Server.HTTP;
 using SoftUniHttpServer.Server.Responses;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SoftUniHttpServer.Server.Controllers
 {
