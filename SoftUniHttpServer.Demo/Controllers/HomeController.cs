@@ -1,4 +1,5 @@
-﻿using SoftUniHttpServer.Server.Controllers;
+﻿using SoftUniHttpServer.Demo.Models;
+using SoftUniHttpServer.Server.Controllers;
 using SoftUniHttpServer.Server.HTTP;
 using System.Text;
 using System.Web;
@@ -23,14 +24,16 @@ namespace SoftUniHttpServer.Demo.Controllers
 
         public Response HtmlFormPost()
         {
-            var sb = new StringBuilder();
+            string name = Request.Form["Name"];
+            string age = Request.Form["Age"];
 
-            foreach (var (key, value) in Request.Form)
+            var model = new FormViewModel()
             {
-                sb.AppendLine($"{key} - {value}");
-            }
+                Name = name,
+                Age = int.Parse(age)
+            };
 
-            return Text(sb.ToString());
+            return View(model);
         }
 
         public Response Session()
