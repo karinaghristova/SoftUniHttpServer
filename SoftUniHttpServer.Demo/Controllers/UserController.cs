@@ -5,12 +5,6 @@ namespace SoftUniHttpServer.Demo.Controllers
 {
     public class UserController : Controller
     {
-        private const string LoginForm = @"<form action='/Login' method='POST'>
-           username: <input type='text' name='username'/>
-           password: <input type='password' name='password'/>
-           <input type='submit' value ='Log In' /> 
-        </form>";
-
         private const string username = "user";
 
         private const string password = "user123";
@@ -20,7 +14,7 @@ namespace SoftUniHttpServer.Demo.Controllers
         {
         }
 
-        public Response Login() => Html(LoginForm);
+        public Response Login() => View();
 
         public Response LoginUser()
         {
@@ -42,12 +36,8 @@ namespace SoftUniHttpServer.Demo.Controllers
 
                 return Html(bodyText, cookies);
             }
-            else
-            {
-                bodyText = LoginForm;
-            }
 
-            return Html(bodyText);
+            return Redirect("/Login");
         }
 
         public Response GetUserData()
