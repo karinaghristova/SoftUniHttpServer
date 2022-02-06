@@ -1,9 +1,5 @@
 ﻿using SoftUniHttpServer.Demo.Controllers;
 using SoftUniHttpServer.Server;
-using SoftUniHttpServer.Server.HTTP;
-using SoftUniHttpServer.Server.Responses;
-using System.Text;
-using System.Web;
 using SoftUniHttpServer.Server.Routing;
 
 public class Startup
