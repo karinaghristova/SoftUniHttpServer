@@ -12,6 +12,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="content.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Views\Home\Content.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

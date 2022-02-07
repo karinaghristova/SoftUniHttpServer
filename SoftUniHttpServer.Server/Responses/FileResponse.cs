@@ -18,7 +18,7 @@ namespace SoftUniHttpServer.Server.Responses
         {
             if (File.Exists(this.FileName))
             {
-                this.Body = String.Empty;
+                this.Body = string.Empty;
                 FileContent = File.ReadAllBytes(this.FileName);
 
                 var fileBytesCount = new FileInfo(this.FileName).Length;
