@@ -36,6 +36,7 @@ namespace SoftUniHttpServer.Server.Routing
 
         private IRoutingTable MapGet(string path, Func<Request, Response> responseFunction)
         {
+            Guard.AgainstDuplicated(routes[Method.Get], path, "RoutingTable.Get");
             this.routes[Method.Get][path] = responseFunction;
 
             return this;
@@ -43,6 +44,7 @@ namespace SoftUniHttpServer.Server.Routing
 
         private IRoutingTable MapPost(string path, Func<Request, Response> responseFunction)
         {
+            Guard.AgainstDuplicated(routes[Method.Post], path, "RoutingTable.Post");
             this.routes[Method.Post][path] = responseFunction;
 
             return this;
