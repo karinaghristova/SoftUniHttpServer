@@ -21,6 +21,9 @@ namespace SoftUniHttpServer.Server.HTTP
 
         public IReadOnlyDictionary<string, string> Form { get; private set; }
 
+        public IReadOnlyDictionary<string, string> Query 
+{ get; private set; }
+
         public static IServiceCollection ServiceCollection { get; private set; }
 
         public static Request Parse(string request, IServiceCollection serviceCollection)
@@ -31,7 +34,7 @@ namespace SoftUniHttpServer.Server.HTTP
 
             var firstLine = lines.First().Split(" ");
 
-            var url = firstLine[1];
+            (string url, Dictionary<string, string> query)  = ParseUrl(firstLine[1]);
 
             Method method = ParseMethod(firstLine[0]);
 
@@ -55,8 +58,38 @@ namespace SoftUniHttpServer.Server.HTTP
                 Cookies = cookies,
                 Body = body,
                 Session = session,
-                Form = form
+                Form = form,
+                Query = query
             };
+        }
+
+        private static (string url, Dictionary<string, string> query) ParseUrl(string queryString)
+        {
+            string url = string.Empty;
+            Dictionary<string, string> query = new Dictionary<string, string>();
+            var parts = queryString.Split("?", 2);
+
+            if (parts.Length == 1)
+            {
+                url = parts[0];
+            }
+            else
+            {
+                //url = parts[0];
+                var queryParams = parts[1].Split("&");
+
+                foreach (var pair in queryParams)
+                {
+                    var param = pair.Split("=");
+
+                    if (param.Length == 2)
+                    {
+                        query.Add(param[0], param[1]);
+                    }
+                }
+            }
+
+            return (url, query);
         }
 
         private static Session GetSession(CookieCollection cookies)
