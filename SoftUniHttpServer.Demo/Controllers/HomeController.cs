@@ -1,4 +1,5 @@
 ﻿using SoftUniHttpServer.Demo.Models;
+using SoftUniHttpServer.Server.Attributes;
 using SoftUniHttpServer.Server.Controllers;
 using SoftUniHttpServer.Server.HTTP;
 using System.Text;
@@ -16,12 +17,16 @@ namespace SoftUniHttpServer.Demo.Controllers
 
         }
 
+        [HttpGet]
         public Response Index() => Text("Hello from the server!");
+
+        public Response Student(string name, int age) => Text($"I am {name} and I am {age} years old");
 
         public Response Redirect() => Redirect("https://softuni.bg");
 
         public Response Html() => View();
 
+        [HttpPost]
         public Response HtmlFormPost()
         {
             string name = Request.Form["Name"];
