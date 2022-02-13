@@ -69,13 +69,8 @@ namespace SoftUniHttpServer.Server.HTTP
             Dictionary<string, string> query = new Dictionary<string, string>();
             var parts = queryString.Split("?", 2);
 
-            if (parts.Length == 1)
+            if (parts.Length > 1)
             {
-                url = parts[0];
-            }
-            else
-            {
-                //url = parts[0];
                 var queryParams = parts[1].Split("&");
 
                 foreach (var pair in queryParams)
@@ -88,6 +83,8 @@ namespace SoftUniHttpServer.Server.HTTP
                     }
                 }
             }
+
+            url = parts[0];
 
             return (url, query);
         }
