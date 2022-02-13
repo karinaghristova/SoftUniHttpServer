@@ -1,4 +1,5 @@
-﻿using System.Web;
+﻿using SoftUniHttpServer.Server.Common;
+using System.Web;
 
 namespace SoftUniHttpServer.Server.HTTP
 {
@@ -20,8 +21,12 @@ namespace SoftUniHttpServer.Server.HTTP
 
         public IReadOnlyDictionary<string, string> Form { get; private set; }
 
-        public static Request Parse(string request)
+        public static IServiceCollection ServiceCollection { get; private set; }
+
+        public static Request Parse(string request, IServiceCollection serviceCollection)
         {
+            ServiceCollection = serviceCollection;
+
             var lines = request.Split("\r\n");
 
             var firstLine = lines.First().Split(" ");

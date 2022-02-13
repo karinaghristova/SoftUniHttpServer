@@ -1,4 +1,5 @@
-﻿using SoftUniHttpServer.Server.HTTP;
+﻿using SoftUniHttpServer.Server.Common;
+using SoftUniHttpServer.Server.HTTP;
 using SoftUniHttpServer.Server.Routing;
 using System.Net;
 using System.Net.Sockets;
@@ -14,6 +15,8 @@ namespace SoftUniHttpServer.Server
 
         private readonly RoutingTable routingTable;
 
+        public readonly IServiceCollection ServiceCollection;
+
         public HttpServer(string ipAddress, int port, Action<IRoutingTable> routingTableConfiguration)
         {
             this.ipAddress = IPAddress.Parse(ipAddress);
@@ -22,6 +25,8 @@ namespace SoftUniHttpServer.Server
             this.serverListener = new TcpListener(this.ipAddress, this.port);
 
             routingTableConfiguration(this.routingTable = new RoutingTable());
+
+            ServiceCollection = new ServiceCollection();
         }
 
         public HttpServer(int port, Action<IRoutingTable> routingTable)
@@ -54,7 +59,7 @@ namespace SoftUniHttpServer.Server
                     string requestText = await ReadRequest(networkStream);
                     Console.WriteLine(requestText);
 
-                    var request = Request.Parse(requestText);
+                    var request = Request.Parse(requestText, ServiceCollection);
 
                     var response = this.routingTable.MatchRequest(request);
 

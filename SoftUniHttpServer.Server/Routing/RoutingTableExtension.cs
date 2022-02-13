@@ -1,5 +1,6 @@
 ﻿using SoftUniHttpServer.Server.Controllers;
 using SoftUniHttpServer.Server.HTTP;
+using System.Reflection;
 
 namespace SoftUniHttpServer.Server.Routing
 {
@@ -25,5 +26,16 @@ namespace SoftUniHttpServer.Server.Routing
 
         private static TController CreateController<TController>(Request request) 
             => (TController)Activator.CreateInstance(typeof(TController), new[] { request });
+
+        private static Controller CreateController(Type controllerType, Request request)
+        {
+            var controller = (Controller)Request.ServiceCollection.CreateInstance(controllerType);
+
+            controllerType
+                .GetProperty("Request", BindingFlags.Instance | BindingFlags.NonPublic)
+                .SetValue(controller, request);
+
+            return controller;
+        }
     }
 }
