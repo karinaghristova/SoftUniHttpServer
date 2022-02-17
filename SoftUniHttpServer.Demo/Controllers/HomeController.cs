@@ -41,6 +41,18 @@ namespace SoftUniHttpServer.Demo.Controllers
             return View(model);
         }
 
+        public Response Test()
+        {
+            var model = new List<FormViewModel>()
+            {
+                new(){ Age = 23, Name = "Pesho" },
+                new(){ Age = 24, Name = "Gosho" },
+                new(){ Age = 23, Name = "Misho" }
+            };
+
+            return View(model);
+        }
+
         public Response Session()
         {
             var sessionExists = Request.Session.ContainsKey(Server.HTTP.Session.SessionCurrentDateKey);
