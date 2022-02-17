@@ -8,7 +8,8 @@ public class Startup
     public static async Task Main()
     {
         var server = new HttpServer(routes => routes
-               .MapControllers());
+               .MapControllers()
+               .MapStaticFiles());
 
         server.ServiceCollection
             .Add<UserService>();
