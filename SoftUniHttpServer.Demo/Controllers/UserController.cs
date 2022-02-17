@@ -1,4 +1,5 @@
-﻿using SoftUniHttpServer.Server.Attributes;
+﻿using SoftUniHttpServer.Demo.Services;
+using SoftUniHttpServer.Server.Attributes;
 using SoftUniHttpServer.Server.Controllers;
 using SoftUniHttpServer.Server.HTTP;
 
@@ -6,13 +7,12 @@ namespace SoftUniHttpServer.Demo.Controllers
 {
     public class UserController : Controller
     {
-        private const string username = "user";
+        private readonly UserService userService;
 
-        private const string password = "user123";
-
-        public UserController(Request request) 
-            : base(request)
+        public UserController(Request request, UserService _userService)
+           : base(request)
         {
+            userService = _userService;
         }
 
         public Response Login() => View();
@@ -24,10 +24,10 @@ namespace SoftUniHttpServer.Demo.Controllers
 
             var bodyText = "";
 
-            var usernameMatches = Request.Form["username"] == username;
-            var passwordMatches = Request.Form["password"] == password;
+            var username = Request.Form["Username"];
+            var password = Request.Form["Password"];
 
-            if (usernameMatches && passwordMatches)
+            if (userService.IsLoginCorrect(username, password))
             {
                 SignIn(Guid.NewGuid().ToString());
 
